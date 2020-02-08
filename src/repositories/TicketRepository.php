@@ -41,6 +41,19 @@ class TicketRepository
 
     /**
      * @param int $id
+     * @return bool
+     * @throws NotFoundHttpException
+     */
+    public function close(int $id): bool
+    {
+        $ticket = $this->findById($id);
+        $ticket->status = Ticket::STATUS_CLOSED;
+
+        return $ticket->save();
+    }
+
+    /**
+     * @param int $id
      * @return Ticket
      * @throws NotFoundHttpException
      */

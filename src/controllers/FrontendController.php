@@ -2,6 +2,7 @@
 
 namespace omny\yii2\ticket\component\controllers;
 
+use omny\yii2\ticket\component\actions\CloseAction;
 use omny\yii2\ticket\component\actions\CreateAction;
 use omny\yii2\ticket\component\actions\ViewAction;
 use omny\yii2\ticket\component\repositories\TicketRepository;
@@ -40,6 +41,7 @@ class FrontendController extends AbstractController
         return [
             'view' => ViewAction::class,
             'create' => CreateAction::class,
+            'close' => CloseAction::class,
         ];
     }
 

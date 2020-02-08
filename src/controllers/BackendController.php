@@ -2,8 +2,10 @@
 
 namespace omny\yii2\ticket\component\controllers;
 
+use omny\yii2\ticket\component\actions\CloseAction;
 use omny\yii2\ticket\component\repositories\TicketRepository;
 use omny\yii2\ticket\component\actions\ViewAction;
+use Yii;
 use yii\base\InvalidConfigException;
 use yii\data\ActiveDataProvider;
 use yii\di\NotInstantiableException;
@@ -18,6 +20,7 @@ class BackendController extends AbstractController
     protected $viewPath = '@vendor/omny/yii2-ticket-component/src/views/backend';
     /** @var TicketRepository */
     private $ticketRepository;
+
     /**
      * @throws InvalidConfigException
      * @throws NotInstantiableException
@@ -26,7 +29,7 @@ class BackendController extends AbstractController
     {
         parent::init();
 
-        $this->ticketRepository = \Yii::$container->get(TicketRepository::class);
+        $this->ticketRepository = Yii::$container->get(TicketRepository::class);
     }
 
     /**
@@ -35,7 +38,8 @@ class BackendController extends AbstractController
     public function actions(): array
     {
         return [
-            'view' => ViewAction::class
+            'view' => ViewAction::class,
+            'close' => CloseAction::class,
         ];
     }
 
