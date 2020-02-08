@@ -4,7 +4,10 @@ namespace omny\yii2\ticket\component\forms;
 
 use omny\yii2\ticket\component\models\Ticket;
 use omny\yii2\ticket\component\repositories\TicketRepository;
+use Yii;
+use yii\base\InvalidConfigException;
 use yii\base\Model;
+use yii\di\NotInstantiableException;
 use yii\web\Request;
 
 /**
@@ -20,14 +23,14 @@ class TicketForm extends Model
     private $ticketRepository;
 
     /**
-     * @throws \yii\base\InvalidConfigException
-     * @throws \yii\di\NotInstantiableException
+     * @throws InvalidConfigException
+     * @throws NotInstantiableException
      */
     public function init()
     {
         parent::init();
 
-        $this->ticketRepository = \Yii::$container->get(TicketRepository::class);
+        $this->ticketRepository = Yii::$container->get(TicketRepository::class);
     }
 
     public function rules(): array

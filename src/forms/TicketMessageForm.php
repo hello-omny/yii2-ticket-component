@@ -2,11 +2,13 @@
 
 namespace omny\yii2\ticket\component\forms;
 
-use omny\yii2\ticket\component\models\Ticket;
+use Exception;
 use omny\yii2\ticket\component\models\TicketMessage;
 use omny\yii2\ticket\component\repositories\TicketMessageRepository;
-use omny\yii2\ticket\component\repositories\TicketRepository;
+use Yii;
+use yii\base\InvalidConfigException;
 use yii\base\Model;
+use yii\di\NotInstantiableException;
 use yii\web\Request;
 
 /**
@@ -24,14 +26,14 @@ class TicketMessageForm extends Model
     private $ticketMessageRepository;
 
     /**
-     * @throws \yii\base\InvalidConfigException
-     * @throws \yii\di\NotInstantiableException
+     * @throws InvalidConfigException
+     * @throws NotInstantiableException
      */
     public function init()
     {
         parent::init();
 
-        $this->ticketMessageRepository = \Yii::$container->get(TicketMessageRepository::class);
+        $this->ticketMessageRepository = Yii::$container->get(TicketMessageRepository::class);
     }
 
     /**
@@ -52,6 +54,7 @@ class TicketMessageForm extends Model
     /**
      * @param Request $request
      * @return TicketMessage|null
+     * @throws Exception
      */
     public function handleRequest(Request $request): ?TicketMessage
     {

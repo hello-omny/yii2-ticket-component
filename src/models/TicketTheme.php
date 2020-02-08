@@ -3,6 +3,8 @@
 namespace omny\yii2\ticket\component\models;
 
 use Yii;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "ticket_theme".
@@ -13,20 +15,20 @@ use Yii;
  *
  * @property Ticket[] $tickets
  */
-class TicketTheme extends \yii\db\ActiveRecord
+class TicketTheme extends ActiveRecord
 {
     /**
-     * {@inheritdoc}
+     * @return string
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return 'ticket_theme';
     }
 
     /**
-     * {@inheritdoc}
+     * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['title', 'status'], 'string', 'max' => 255],
@@ -34,9 +36,9 @@ class TicketTheme extends \yii\db\ActiveRecord
     }
 
     /**
-     * {@inheritdoc}
+     * @return array
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id' => 'ID',
@@ -46,7 +48,7 @@ class TicketTheme extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getTickets()
     {

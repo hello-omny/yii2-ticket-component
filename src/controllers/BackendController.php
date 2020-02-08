@@ -2,25 +2,22 @@
 
 namespace omny\yii2\ticket\component\controllers;
 
-use omny\yii2\ticket\component\actions\CreateAction;
-use omny\yii2\ticket\component\actions\ViewAction;
 use omny\yii2\ticket\component\repositories\TicketRepository;
-use Yii;
+use omny\yii2\ticket\component\actions\ViewAction;
 use yii\base\InvalidConfigException;
 use yii\data\ActiveDataProvider;
 use yii\di\NotInstantiableException;
 
 /**
- * Class FrontendController
+ * Class BackendController
  * @package omny\yii2\ticket\component\controllers
  */
-class FrontendController extends AbstractController
+class BackendController extends AbstractController
 {
     /** @var string */
-    protected $viewPath = '@vendor/omny/yii2-ticket-component/src/views/frontend';
+    protected $viewPath = '@vendor/omny/yii2-ticket-component/src/views/backend';
     /** @var TicketRepository */
     private $ticketRepository;
-
     /**
      * @throws InvalidConfigException
      * @throws NotInstantiableException
@@ -29,7 +26,7 @@ class FrontendController extends AbstractController
     {
         parent::init();
 
-        $this->ticketRepository = Yii::$container->get(TicketRepository::class);
+        $this->ticketRepository = \Yii::$container->get(TicketRepository::class);
     }
 
     /**
@@ -38,8 +35,7 @@ class FrontendController extends AbstractController
     public function actions(): array
     {
         return [
-            'view' => ViewAction::class,
-            'create' => CreateAction::class,
+            'view' => ViewAction::class
         ];
     }
 
@@ -49,9 +45,9 @@ class FrontendController extends AbstractController
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => $this->ticketRepository->getAllActiveQueryForUser(Yii::$app->getUser()->getId())
+            'query' => $this->ticketRepository->getAllActiveQuery()
         ]);
-        
+
         return $this->render('index', compact('dataProvider'));
     }
 }

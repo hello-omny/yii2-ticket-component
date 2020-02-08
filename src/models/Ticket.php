@@ -3,6 +3,8 @@
 namespace omny\yii2\ticket\component\models;
 
 use Yii;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "ticket".
@@ -19,23 +21,23 @@ use Yii;
  * @property TicketTheme $theme
  * @property TicketMessage[] $ticketMessages
  */
-class Ticket extends \yii\db\ActiveRecord
+class Ticket extends ActiveRecord
 {
     public const STATUS_NEW = 'new';
     public const STATUS_CLOSED = 'closed';
 
     /**
-     * {@inheritdoc}
+     * @return string
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return 'ticket';
     }
 
     /**
-     * {@inheritdoc}
+     * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['user_id', 'theme_id'], 'required'],
@@ -48,9 +50,9 @@ class Ticket extends \yii\db\ActiveRecord
     }
 
     /**
-     * {@inheritdoc}
+     * @return array
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id' => 'ID',
@@ -65,7 +67,7 @@ class Ticket extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getTheme()
     {
@@ -73,15 +75,28 @@ class Ticket extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getTicketMessages()
     {
         return $this->hasMany(TicketMessage::class, ['ticket_id' => 'id']);
     }
 
+    /**
+     * @return ActiveQuery
+     */
     public function getActiveTicketMessages()
     {
         return $this->getTicketMessages()->andWhere(['ticket_message.status' => ['new']]);
+    }
+
+    /**
+     * @return TicketMessage
+     */
+    public function getLastTicketMessage(): TicketMessage
+    {
+        return $this->getActiveTicketMessages()
+            ->orderBy(['ticket_message.created' => SORT_DESC])
+            ->one();
     }
 }

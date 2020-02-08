@@ -2,8 +2,9 @@
 
 namespace omny\yii2\ticket\component\repositories;
 
+use Exception;
 use omny\yii2\ticket\component\models\Ticket;
-use omny\yii2\ticket\component\models\TicketMessage;
+use Yii;
 use yii\db\ActiveQuery;
 use yii\helpers\StringHelper;
 use yii\web\NotFoundHttpException;
@@ -20,19 +21,19 @@ class TicketRepository
      */
     public function create(string $message): ?Ticket
     {
-        $transaction = \Yii::$app->getDb()->beginTransaction();
+        $transaction = Yii::$app->getDb()->beginTransaction();
         try {
             $ticket = $this->newTicket($message);
 
             /** @var TicketMessageRepository $ticketMessageRepository */
-            $ticketMessageRepository = \Yii::$container->get(TicketMessageRepository::class);
+            $ticketMessageRepository = Yii::$container->get(TicketMessageRepository::class);
             $ticketMessageRepository->create($message, $ticket->id);
 
             $transaction->commit();
             return $ticket;
         } catch (\Throwable $exception) {
             $transaction->rollBack();
-            \Yii::warning($exception->getMessage());
+            Yii::warning($exception->getMessage());
         }
 
         return null;
@@ -66,13 +67,26 @@ class TicketRepository
             ->where([
                 't.id' => $id,
                 't.status' => Ticket::STATUS_NEW
-            ]);
+            ])
+            ->one();
 
         if ($model !== null) {
             return $model;
         }
 
         throw new NotFoundHttpException("Ticket {$id} not found or unavailable.");
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getAllActiveQuery(): ActiveQuery
+    {
+        return Ticket::find()
+            ->alias('t')
+            ->where([
+                't.status' => Ticket::STATUS_NEW
+            ]);
     }
 
     /**
@@ -92,19 +106,19 @@ class TicketRepository
     /**
      * @param $message
      * @return Ticket
-     * @throws \Exception
+     * @throws Exception
      */
     private function newTicket($message): Ticket
     {
         $ticket = new Ticket();
 
         $ticket->title = StringHelper::truncateWords($message, 5);
-        $ticket->user_id = \Yii::$app->getUser()->getId();
+        $ticket->user_id = Yii::$app->getUser()->getId();
         $ticket->theme_id = 1;
         $ticket->created = (new \DateTime())->format('Y-m-d H:i:s');
 
         if (!$ticket->save()) {
-            throw new RuntimeException('Tiket not saved.');
+            throw new RuntimeException('Ticket not saved.');
         };
 
         return $ticket;

@@ -13,6 +13,6 @@ use \yii\helpers\Html;
 $form = ActiveForm::begin();
 
 echo $form->field($ticketMessageForm, 'message')->textarea();
-echo Html::submitButton('Написать');
+echo Html::submitButton('Написать', ['class' => 'btn btn-sm btn-success']);
 
 ActiveForm::end();

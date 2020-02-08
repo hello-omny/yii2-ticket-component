@@ -3,6 +3,8 @@
 namespace omny\yii2\ticket\component\models;
 
 use Yii;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "ticket_message".
@@ -17,20 +19,20 @@ use Yii;
  *
  * @property Ticket $ticket
  */
-class TicketMessage extends \yii\db\ActiveRecord
+class TicketMessage extends ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return 'ticket_message';
     }
 
     /**
-     * {@inheritdoc}
+     * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['text', 'user_id', 'ticket_id'], 'required'],
@@ -43,9 +45,9 @@ class TicketMessage extends \yii\db\ActiveRecord
     }
 
     /**
-     * {@inheritdoc}
+     * @return array
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id' => 'ID',
@@ -59,7 +61,7 @@ class TicketMessage extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getTicket()
     {
